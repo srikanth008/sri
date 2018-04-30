@@ -11,12 +11,14 @@ $JsonFiles =Get-ChildItem -Path $SourcefilePath -name -Filter $FilenamePostfix |
 
 
 cd C:\npm\node_modules\newman\bin
+
+
 foreach($File in $JsonFiles)
 {
 $Collectionfilepath = "$SourceFilePath\$File"
 $Environmentfilepath = "$SourceFilePath\$EnvironmentFile"
-}
-node newman run --disable -unicode $Collectionfilepath  -e $Environmentfilepath
+newman run --disable -unicode $Collectionfilepath  -e $Environmentfilepath
 
+}
 
 exit $LASTEXITCODE
