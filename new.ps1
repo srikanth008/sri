@@ -1,4 +1,4 @@
-  
+
 
 echo "You are in the power shell script now..."
 
@@ -11,6 +11,7 @@ $JsonFiles =Get-ChildItem -Path $SourcefilePath -name -Filter $FilenamePostfix |
 
 
 cd C:\npm\node_modules\newman\bin
+npm install -g newman
 
 
 foreach($File in $JsonFiles)
