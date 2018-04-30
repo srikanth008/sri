@@ -17,7 +17,7 @@ foreach($File in $JsonFiles)
 {
 $Collectionfilepath = "$SourceFilePath\$File"
 $Environmentfilepath = "$SourceFilePath\$EnvironmentFile"
-newman run --disable -unicode $Collectionfilepath  -e $Environmentfilepath
+cd newman run --disable -unicode $Collectionfilepath  -e $Environmentfilepath
 
 }
 
