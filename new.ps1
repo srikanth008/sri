@@ -1,5 +1,4 @@
-
-
+ 
 echo "You are in the power shell script now..."
 
 $SourceFilePath =$env:WORKSPACE
@@ -18,7 +17,7 @@ $Collectionfilepath = "$SourceFilePath\$File"
 $Environmentfilepath = "$SourceFilePath\$EnvironmentFile"
 
 cd C:\npm\node_modules\newman\bin
-node newman run $Collectionfilepath  -e $Environmentfilepath
+node newman run $Collectionfilepath  -e $Environmentfilepath -r html
 
 }
 
