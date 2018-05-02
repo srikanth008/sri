@@ -18,8 +18,7 @@ $Collectionfilepath = "$SourceFilePath\$File"
 $Environmentfilepath = "$SourceFilePath\$EnvironmentFile"
 
 cd C:\npm\node_modules\newman\bin
-npm install -g newman
-newman run $Collectionfilepath  -e $Environmentfilepath
+node newman run $Collectionfilepath  -e $Environmentfilepath
 
 }
 
