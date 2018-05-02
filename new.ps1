@@ -10,14 +10,15 @@ $JsonFiles =Get-ChildItem -Path $SourcefilePath -name -Filter $FilenamePostfix |
 
 
 
-cd C:\npm\node_modules\newman\bin
-npm install -g newman
 
 
 foreach($File in $JsonFiles)
 {
 $Collectionfilepath = "$SourceFilePath\$File"
 $Environmentfilepath = "$SourceFilePath\$EnvironmentFile"
+
+cd C:\npm\node_modules\newman\bin
+npm install -g newman
 newman run $Collectionfilepath  -e $Environmentfilepath
 
 }
