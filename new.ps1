@@ -17,7 +17,7 @@ $Collectionfilepath = "$SourceFilePath\$File"
 $Environmentfilepath = "$SourceFilePath\$EnvironmentFile"
 
 cd C:\npm\node_modules\newman\bin
-node newman run $Collectionfilepath  -e $Environmentfilepath -r json
+node newman run $Collectionfilepath  -e $Environmentfilepath -r html
 
 }
 
