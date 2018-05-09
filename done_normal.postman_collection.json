@@ -1,0 +1,442 @@
+{
+	"info": {
+		"name": "Colorado PAYM Inlife SIT19",
+		"_postman_id": "197ac694-6319-c5e9-de0e-553f8d62ed07",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Access token endpoint",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"if (responseCode.code != 200) {\r",
+							"    postman.setNextRequest(null);\r",
+							"}\r",
+							"\r",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+							"\r",
+							"response = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"accessToken\", response.access_token);\r",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "KWV86HBMoRSdDXqhi9G5FLg4Vw6t6Kmm",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "3txASNTh0Qz0985c",
+							"type": "string"
+						},
+						{
+							"key": "saveHelperData",
+							"type": "any"
+						},
+						{
+							"key": "showPassword",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic dUoyZERKdkk3RFpBR0VIR1MwYWI4N2J0WFB1RHRqa3E6YlQ5SGhZQmN2VVczOHNYNg==",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "dcop6@mailinator.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Nttdata@123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-test1.ee.co.uk/v1/identity/token",
+					"protocol": "https",
+					"host": [
+						"api-test1",
+						"ee",
+						"co",
+						"uk"
+					],
+					"path": [
+						"v1",
+						"identity",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Person identity endpoint",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"var response = JSON.parse(responseBody);",
+							"",
+							"if (response && response[\"billing-accounts\"] && response[\"billing-accounts\"].length && response[\"billing-accounts\"].length > 0) {",
+							"    var ba = response[\"billing-accounts\"][0];",
+							"    if (ba[\"mobile-subscriptions\"] && ba[\"mobile-subscriptions\"].length && ba[\"mobile-subscriptions\"].length > 0) {",
+							"        var s = ba[\"mobile-subscriptions\"][0];",
+							"        if (s.links && s.links.length && s.links.length > 0) {",
+							"            for (var i = 0; i < s.links.length; i++) {",
+							"                var link = s.links[i];",
+							"                if (link.rel === \"inlife-recommendations\") {",
+							"                    postman.setEnvironmentVariable(\"irechref\", link.href);",
+							"                }",
+							"            }",
+							"        }",
+							"    }",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(",
+							"    \"trackingHeader\", ",
+							"    'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { ",
+							"        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8); return v.toString(16); ",
+							"    })",
+							");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-EE-EL-Tracking-Header",
+						"value": "{{trackingHeader}}"
+					},
+					{
+						"key": "X-EE-API-Originator",
+						"value": "Originator121"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api-test1.ee.co.uk/digital-inlife/v1/person-identities/self",
+					"protocol": "https",
+					"host": [
+						"api-test1",
+						"ee",
+						"co",
+						"uk"
+					],
+					"path": [
+						"digital-inlife",
+						"v1",
+						"person-identities",
+						"self"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get reccomendations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(",
+							"    \"trackingHeader\", ",
+							"    'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { ",
+							"        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8); return v.toString(16); ",
+							"    })",
+							");",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-EE-EL-Tracking-Header",
+						"value": "{{trackingHeader}}"
+					},
+					{
+						"key": "X-EE-API-Originator",
+						"value": "Originator121"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{irechref}}",
+					"host": [
+						"{{irechref}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get reccomendations-ADDLINE,ADDON",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(",
+							"    \"trackingHeader\", ",
+							"    'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { ",
+							"        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8); return v.toString(16); ",
+							"    })",
+							");",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-EE-EL-Tracking-Header",
+						"value": "{{trackingHeader}}"
+					},
+					{
+						"key": "X-EE-API-Originator",
+						"value": "Originator121"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{irechref}}?includeOffers=ADDLINE,ADDON",
+					"host": [
+						"{{irechref}}"
+					],
+					"query": [
+						{
+							"key": "includeOffers",
+							"value": "ADDLINE,ADDON",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get reccomendations-Insurance",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(",
+							"    \"trackingHeader\", ",
+							"    'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { ",
+							"        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8); return v.toString(16); ",
+							"    })",
+							");",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-EE-EL-Tracking-Header",
+						"value": "{{trackingHeader}}"
+					},
+					{
+						"key": "X-EE-API-Originator",
+						"value": "Originator121"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{irechref}}?includeOffers=INSURANCE",
+					"host": [
+						"{{irechref}}"
+					],
+					"query": [
+						{
+							"key": "includeOffers",
+							"value": "INSURANCE",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get reccomendations-HOME",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(",
+							"    \"trackingHeader\", ",
+							"    'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { ",
+							"        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8); return v.toString(16); ",
+							"    })",
+							");",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-EE-EL-Tracking-Header",
+						"value": "{{trackingHeader}}"
+					},
+					{
+						"key": "X-EE-API-Originator",
+						"value": "Originator121"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{irechref}}?includeOffers=HOME",
+					"host": [
+						"{{irechref}}"
+					],
+					"query": [
+						{
+							"key": "includeOffers",
+							"value": "HOME",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
