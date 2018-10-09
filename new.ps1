@@ -5,7 +5,7 @@ $SourceFilePath =$env:WORKSPACE
  $JsonFiles =Get-ChildItem -Path $SourcefilePath -name -Filter $FilenamePostfix | Sort-Object -Property CreationTime -Descending
  foreach($File in $JsonFiles)
  {
- $Collectionfilepath = "$SourceFilePath\$File"
+ $Collectionfilepath = "$SourceFilePath\$FilenamePostfix"
 $Environmentfilepath = "$SourceFilePath\$EnvironmentFile" 
 cd C:\npm\node_modules\newman\bin 
 node newman run $Collectionfilepath  -e $Environmentfilepath -r json 
