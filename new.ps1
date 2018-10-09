@@ -8,7 +8,7 @@ $JsonFiles =Get-ChildItem -Path $SourcefilePath -name -Filter $FilenamePostfix |
 
 foreach($File in $JsonFiles)
 {
-$Collectionfilepath = "$SourceFilePath\$File"
+$Collectionfilepath = "$SourceFilePath\$JsonFiles"
 $Environmentfilepath = "$SourceFilePath\$EnvironmentFile"
 
 cd C:\npm\node_modules\newman\bin
