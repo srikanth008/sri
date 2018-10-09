@@ -1,4 +1,3 @@
-:\backup\Collections 
 echo "You are in the power shell script now..."
 
 $SourceFilePath =$env:WORKSPACE
